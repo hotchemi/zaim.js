@@ -1,37 +1,34 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
-    <meta charset='utf-8'>
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <title>Zaim.js by hotchemi</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <title>Zaim.js by hotchemi</title>
   </head>
-
   <body>
-    <div id="container">
-      <div class="inner">
+    <div class="wrapper">
+      <header>
+        <h1>Zaim.js</h1>
+        <p>Node.js library for the Zaim API.</p>
 
-        <header>
-          <h1>Zaim.js</h1>
-          <h2>Node.js library for the Zaim API.</h2>
-        </header>
+        <p class="view"><a href="https://github.com/hotchemi/zaim.js">View the Project on GitHub <small>hotchemi/zaim.js</small></a></p>
 
-        <section id="downloads" class="clearfix">
-          <a href="https://github.com/hotchemi/zaim.js/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/hotchemi/zaim.js/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
-          <a href="https://github.com/hotchemi/zaim.js" id="view-on-github" class="button"><span>View on GitHub</span></a>
-        </section>
 
-        <hr>
-
-        <section id="main_content">
-          <h1>zaim.js<a href="http://travis-ci.org/hotchemi/zaim.js"><img src="https://secure.travis-ci.org/hotchemi/zaim.js.png" alt="Build Status"></a>
+        <ul>
+          <li><a href="https://github.com/hotchemi/zaim.js/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/hotchemi/zaim.js/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/hotchemi/zaim.js">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>Zaim.js <a href="http://travis-ci.org/hotchemi/zaim.js"><img src="https://secure.travis-ci.org/hotchemi/zaim.js.png" alt="Build Status"></a>
 </h1>
 
 <p>Node.js library for the Zaim API.</p>
@@ -45,22 +42,118 @@
 
 <h2>Usage</h2>
 
-<p>Coming soon…</p>
+<p><strong>このドキュメントは編集中です｡各メソッドに渡すパラメータは本家 (<a href="https://zaim.net/home/api">https://zaim.net/home/api</a>) に準拠しています｡</strong><br><strong>お急ぎの方はlib/zaim.jsとtest/以下を見てくれれば理解できると思われます｡</strong></p>
 
-<h2>Link</h2>
+<h3>Constructor</h3>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">Zaim</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'../lib/zaim'</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">zaim</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Zaim</span><span class="p">({</span>
+  <span class="c1">// must configure cossumer key and secret</span>
+  <span class="nx">consumerKey</span><span class="o">:</span> <span class="s1">'CONSUMER KEY'</span><span class="p">,</span>
+  <span class="nx">consumerSecret</span><span class="o">:</span> <span class="s1">'CONSUMER SECRET'</span><span class="p">,</span>
+  <span class="c1">// option params</span>
+  <span class="nx">accessToken</span><span class="o">:</span> <span class="s1">'ACCESS TOKEN'</span><span class="p">,</span>
+  <span class="nx">accessTokenSecret</span><span class="o">:</span> <span class="s1">'ACCESS TOKEN SECRET'</span><span class="p">,</span>
+  <span class="nx">callbackUrl</span><span class="o">:</span> <span class="s1">'CALLBACK URL'</span>
+<span class="p">});</span>
+</pre></div>
+
+<h3>Authorization url</h3>
+
+<div class="highlight"><pre><span class="c1">// return https://www.zaim.net/users/auth?oauth_token=***</span>
+<span class="kd">var</span> <span class="nx">authUrl</span> <span class="o">=</span> <span class="nx">zaim</span><span class="p">.</span><span class="nx">getAuthorizationUrl</span><span class="p">();</span>
+</pre></div>
+
+<h3>Set token and secret</h3>
+
+<div class="highlight"><pre><span class="nx">zaim</span><span class="p">.</span><span class="nx">setAccessToken</span><span class="p">(</span><span class="s1">'accessToken'</span><span class="p">);</span>
+<span class="nx">zaim</span><span class="p">.</span><span class="nx">setAccessTokenSecret</span><span class="p">(</span><span class="s1">'accessTokenSecret'</span><span class="p">);</span>
+</pre></div>
+
+<h3>User</h3>
+
+<div class="highlight"><pre><span class="nx">zaim</span><span class="p">.</span><span class="nx">getCredentials</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<h3>Create payment</h3>
+
+<div class="highlight"><pre><span class="nx">zaim</span><span class="p">.</span><span class="nx">createPay</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">err</span><span class="p">){},</span>
+  <span class="p">{</span> <span class="nx">category_id</span><span class="o">:</span> <span class="s1">'category_id'</span><span class="p">,</span>
+    <span class="nx">genre_id</span><span class="o">:</span> <span class="s1">'genre_id'</span><span class="p">,</span>
+    <span class="nx">price</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="nx">date</span><span class="o">:</span> <span class="s1">'2013-04-10'</span> <span class="p">});</span>
+</pre></div>
+
+<h3>Create income</h3>
+
+<div class="highlight"><pre><span class="nx">zaim</span><span class="p">.</span><span class="nx">createIncome</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">err</span><span class="p">){},</span>
+  <span class="p">{</span> <span class="nx">category_id</span><span class="o">:</span> <span class="s1">'category_id'</span><span class="p">,</span>
+    <span class="nx">price</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="nx">date</span><span class="o">:</span> <span class="s1">'2013-04-10'</span> <span class="p">});</span>
+</pre></div>
+
+<h3>Get money</h3>
+
+<div class="highlight"><pre><span class="nx">zaim</span><span class="p">.</span><span class="nx">getMoney</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<h3>Get payment categories</h3>
+
+<div class="highlight"><pre><span class="nx">zaim</span><span class="p">.</span><span class="nx">getPayCategories</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<h3>Get payment categories</h3>
+
+<div class="highlight"><pre><span class="nx">zaim</span><span class="p">.</span><span class="nx">getPayCategories</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<h3>Get income categories</h3>
+
+<div class="highlight"><pre><span class="nx">zaim</span><span class="p">.</span><span class="nx">getIncomeCategories</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<h3>Get payment genres</h3>
+
+<div class="highlight"><pre><span class="nx">zaim</span><span class="p">.</span><span class="nx">getPayGenres</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+<span class="p">},</span> <span class="p">{</span><span class="nx">lang</span><span class="o">:</span> <span class="s1">'ja'</span><span class="p">});</span>
+</pre></div>
+
+<h3>Get currencies</h3>
+
+<div class="highlight"><pre><span class="nx">zaim</span><span class="p">.</span><span class="nx">getCurrencies</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<h2>Release note</h2>
+
+<ul>
+<li>2013/04/09 0.0.1 release.</li>
+</ul><h2>Link</h2>
 
 <ul>
 <li><a href="https://zaim.net/home/api">https://zaim.net/home/api</a></li>
+<li><a href="https://npmjs.org/package/zaim">https://npmjs.org/package/zaim</a></li>
 </ul>
-        </section>
-
-        <footer>
-          Zaim.js is maintained by <a href="https://github.com/hotchemi">hotchemi</a><br>
-          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.
-        </footer>
-
-        
-      </div>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/hotchemi">hotchemi</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
     </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
   </body>
 </html>
