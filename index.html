@@ -42,30 +42,38 @@
 
 <h2>Usage</h2>
 
-<p><strong>このドキュメントは編集中です｡各メソッドに渡すパラメータは本家 (<a href="https://zaim.net/home/api">https://zaim.net/home/api</a>) に準拠しています｡</strong><br><strong>お急ぎの方はlib/zaim.jsとtest/以下を見てくれれば理解できると思われます｡</strong></p>
+<p>Please see <a href="https://dev.zaim.net/home/api">API doc</a> for further details.</p>
 
 <h3>Constructor</h3>
 
-<div class="highlight"><pre><span class="kd">var</span> <span class="nx">Zaim</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'../lib/zaim'</span><span class="p">);</span>
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">Zaim</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'zaim'</span><span class="p">);</span>
 
 <span class="kd">var</span> <span class="nx">zaim</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Zaim</span><span class="p">({</span>
-  <span class="c1">// must configure cossumer key and secret</span>
+  <span class="c1">// must configure consumer key and secret</span>
   <span class="nx">consumerKey</span><span class="o">:</span> <span class="s1">'CONSUMER KEY'</span><span class="p">,</span>
   <span class="nx">consumerSecret</span><span class="o">:</span> <span class="s1">'CONSUMER SECRET'</span><span class="p">,</span>
   <span class="c1">// option params</span>
   <span class="nx">accessToken</span><span class="o">:</span> <span class="s1">'ACCESS TOKEN'</span><span class="p">,</span>
   <span class="nx">accessTokenSecret</span><span class="o">:</span> <span class="s1">'ACCESS TOKEN SECRET'</span><span class="p">,</span>
-  <span class="nx">callbackUrl</span><span class="o">:</span> <span class="s1">'CALLBACK URL'</span>
+  <span class="nx">callback</span><span class="o">:</span> <span class="s1">'CALLBACK URL'</span>
 <span class="p">});</span>
 </pre></div>
 
 <h3>Authorization url</h3>
 
-<div class="highlight"><pre><span class="c1">// return https://www.zaim.net/users/auth?oauth_token=***</span>
-<span class="kd">var</span> <span class="nx">authUrl</span> <span class="o">=</span> <span class="nx">zaim</span><span class="p">.</span><span class="nx">getAuthorizationUrl</span><span class="p">();</span>
+<div class="highlight"><pre><span class="c1">// https://www.zaim.net/users/auth?oauth_token=***</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">zaim</span><span class="p">.</span><span class="nx">getAuthorizationUrl</span><span class="p">());</span>
 </pre></div>
 
-<h3>Set token and secret</h3>
+<h3>Get access token and Secret</h3>
+
+<div class="highlight"><pre><span class="nx">zaim</span><span class="p">.</span><span class="nx">getOAuthAccessToken</span><span class="p">(</span><span class="nx">pin</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">token</span><span class="p">,</span> <span class="nx">secret</span><span class="p">,</span> <span class="nx">results</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">token</span><span class="p">);</span> <span class="c1">//access token</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">secret</span><span class="p">);</span> <span class="c1">//access token secret</span>
+<span class="p">});</span>
+</pre></div>
+
+<h3>Set access token and secret</h3>
 
 <div class="highlight"><pre><span class="nx">zaim</span><span class="p">.</span><span class="nx">setAccessToken</span><span class="p">(</span><span class="s1">'accessToken'</span><span class="p">);</span>
 <span class="nx">zaim</span><span class="p">.</span><span class="nx">setAccessTokenSecret</span><span class="p">(</span><span class="s1">'accessTokenSecret'</span><span class="p">);</span>
@@ -80,22 +88,48 @@
 
 <h3>Create payment</h3>
 
-<div class="highlight"><pre><span class="nx">zaim</span><span class="p">.</span><span class="nx">createPay</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">err</span><span class="p">){},</span>
-  <span class="p">{</span> <span class="nx">category_id</span><span class="o">:</span> <span class="s1">'category_id'</span><span class="p">,</span>
-    <span class="nx">genre_id</span><span class="o">:</span> <span class="s1">'genre_id'</span><span class="p">,</span>
-    <span class="nx">price</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
-    <span class="nx">date</span><span class="o">:</span> <span class="s1">'2013-04-10'</span> <span class="p">});</span>
+<div class="highlight"><pre><span class="nx">zaim</span><span class="p">.</span><span class="nx">createPay</span><span class="p">({</span>
+  <span class="nx">category_id</span><span class="o">:</span> <span class="s1">'category_id'</span><span class="p">,</span> <span class="c1">//required</span>
+  <span class="nx">genre_id</span><span class="o">:</span> <span class="s1">'genre_id'</span><span class="p">,</span> <span class="c1">//required</span>
+  <span class="nx">price</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span> <span class="c1">//required</span>
+  <span class="nx">date</span><span class="o">:</span> <span class="s1">'2013-04-10'</span><span class="p">,</span>
+  <span class="nx">comment</span><span class="o">:</span> <span class="s1">'comment: memo (within 100 characters)'</span><span class="p">,</span>
+  <span class="nx">active</span><span class="o">:</span> <span class="s1">'public or private（0:private 1:public, default is 0）'</span>
+<span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">err</span><span class="p">){</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+<span class="p">});</span>
 </pre></div>
 
 <h3>Create income</h3>
 
-<div class="highlight"><pre><span class="nx">zaim</span><span class="p">.</span><span class="nx">createIncome</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">err</span><span class="p">){},</span>
-  <span class="p">{</span> <span class="nx">category_id</span><span class="o">:</span> <span class="s1">'category_id'</span><span class="p">,</span>
-    <span class="nx">price</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
-    <span class="nx">date</span><span class="o">:</span> <span class="s1">'2013-04-10'</span> <span class="p">});</span>
+<div class="highlight"><pre><span class="nx">zaim</span><span class="p">.</span><span class="nx">createIncome</span><span class="p">({</span>
+  <span class="nx">category_id</span><span class="o">:</span> <span class="s1">'category_id'</span><span class="p">,</span> <span class="c1">//required</span>
+  <span class="nx">price</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span> <span class="c1">//required</span>
+  <span class="nx">date</span><span class="o">:</span> <span class="s1">'2013-04-10'</span><span class="p">,</span>
+  <span class="nx">comment</span><span class="o">:</span> <span class="s1">'comment: memo (within 100 characters)'</span><span class="p">,</span>
+  <span class="nx">active</span><span class="o">:</span> <span class="s1">'public or private（0:private 1:public, default is 0）'</span>
+<span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">err</span><span class="p">){</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+<span class="p">});</span>
 </pre></div>
 
 <h3>Get money</h3>
+
+<div class="highlight"><pre><span class="nx">zaim</span><span class="p">.</span><span class="nx">getMoney</span><span class="p">({</span>
+  <span class="nx">category_id</span><span class="o">:</span> <span class="s1">'narrow down by category_id'</span><span class="p">,</span>
+  <span class="nx">genre_id</span><span class="o">:</span> <span class="s1">'narrow down by genre_id'</span><span class="p">,</span>
+  <span class="nx">type</span><span class="o">:</span> <span class="s1">'narrow down by type (pay or income)'</span><span class="p">,</span>
+  <span class="nx">order</span><span class="o">:</span> <span class="s1">'sort by id or date (default : date)'</span><span class="p">,</span>
+  <span class="nx">start_date</span><span class="o">:</span> <span class="s1">'the first date (Y-m-d format)'</span><span class="p">,</span>
+  <span class="nx">end_date</span><span class="o">:</span> <span class="s1">'the last date (Y-m-d format)'</span><span class="p">,</span>
+  <span class="nx">page</span><span class="o">:</span> <span class="s1">'number of current page (default 1)'</span><span class="p">,</span>
+  <span class="nx">limit</span><span class="o">:</span> <span class="s1">'number of items per page (default 20, max 100)'</span>
+<span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<p>or</p>
 
 <div class="highlight"><pre><span class="nx">zaim</span><span class="p">.</span><span class="nx">getMoney</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
   <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
@@ -104,12 +138,14 @@
 
 <h3>Get payment categories</h3>
 
-<div class="highlight"><pre><span class="nx">zaim</span><span class="p">.</span><span class="nx">getPayCategories</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><span class="nx">zaim</span><span class="p">.</span><span class="nx">getPayCategories</span><span class="p">({</span>
+  <span class="nx">lang</span><span class="o">:</span> <span class="s1">'If you set this parameter with "ja", response title becomes Japanese.'</span>
+<span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
   <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
 <span class="p">});</span>
 </pre></div>
 
-<h3>Get payment categories</h3>
+<p>or</p>
 
 <div class="highlight"><pre><span class="nx">zaim</span><span class="p">.</span><span class="nx">getPayCategories</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
   <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
@@ -118,6 +154,15 @@
 
 <h3>Get income categories</h3>
 
+<div class="highlight"><pre><span class="nx">zaim</span><span class="p">.</span><span class="nx">getIncomeCategories</span><span class="p">({</span>
+  <span class="nx">lang</span><span class="o">:</span> <span class="s1">'If you set this parameter with "ja", response title becomes Japanese.'</span>
+<span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<p>or</p>
+
 <div class="highlight"><pre><span class="nx">zaim</span><span class="p">.</span><span class="nx">getIncomeCategories</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
   <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
 <span class="p">});</span>
@@ -125,9 +170,18 @@
 
 <h3>Get payment genres</h3>
 
+<div class="highlight"><pre><span class="nx">zaim</span><span class="p">.</span><span class="nx">getPayGenres</span><span class="p">({</span>
+  <span class="nx">lang</span><span class="o">:</span> <span class="s1">'If you set this parameter with "ja", response title becomes Japanese.'</span>
+<span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<p>or</p>
+
 <div class="highlight"><pre><span class="nx">zaim</span><span class="p">.</span><span class="nx">getPayGenres</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
   <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
-<span class="p">},</span> <span class="p">{</span><span class="nx">lang</span><span class="o">:</span> <span class="s1">'ja'</span><span class="p">});</span>
+<span class="p">});</span>
 </pre></div>
 
 <h3>Get currencies</h3>
@@ -137,15 +191,22 @@
 <span class="p">});</span>
 </pre></div>
 
+<h2>Test</h2>
+
+<pre><code>$ npm test
+</code></pre>
+
 <h2>Release note</h2>
 
 <ul>
 <li>2013/04/09 0.0.1 release.</li>
+<li>2013/04/30 0.0.7 release.</li>
 </ul><h2>Link</h2>
 
 <ul>
-<li><a href="https://zaim.net/home/api">https://zaim.net/home/api</a></li>
+<li><a href="https://dev.zaim.net/home/api">https://dev.zaim.net/home/api</a></li>
 <li><a href="https://npmjs.org/package/zaim">https://npmjs.org/package/zaim</a></li>
+<li><a href="http://hotchemi.github.io/zaim.js">http://hotchemi.github.io/zaim.js</a></li>
 </ul>
       </section>
       <footer>
