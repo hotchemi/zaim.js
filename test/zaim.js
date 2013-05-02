@@ -59,6 +59,18 @@ describe('getAuthorizationUrl() suite', function() {
       zaim.getAuthorizationUrl();
     }).to.not.throwError();
   });
+
+  it('should match expected RegExp', function() {
+    var zaim = new Zaim({
+      consumerKey:'consumerKey',
+      consumerSecret: 'consumerSecret',
+      callback: 'http://zaim.net'
+    });
+
+    zaim.getAuthorizationUrl(function(url) {
+      expect(url).to.match(/^https:\/\/www.zaim.net\/users\/auth\?oauth_token=/);
+    });
+  });
 });
 
 describe('setter suite', function() {
@@ -67,7 +79,7 @@ describe('setter suite', function() {
       consumerKey:'consumerKey',
       consumerSecret: 'consumerSecret'
     });
-    zaim.setAccessToken('accessToken')
+    zaim.setAccessToken('accessToken');
     expect(zaim.token).to.equal('accessToken');
   });
 

@@ -27,8 +27,10 @@ var zaim = new Zaim({
 ```
 ###Authorization url
 ```javascript
-// https://www.zaim.net/users/auth?oauth_token=***
-console.log(zaim.getAuthorizationUrl());
+zaim.getAuthorizationUrl(function(url) {
+  // https://www.zaim.net/users/auth?oauth_token=***
+  console.log(url);
+});
 ```
 ###Get access token and Secret
 ```javascript
@@ -149,7 +151,7 @@ zaim.getCurrencies(function(data, err) {
 ## Release note
 * 2013/04/09 0.0.1 release.
 * 2013/04/30 0.0.7 release.
-* 2013/04/30 0.0.8 release.
+* 2013/04/30 0.0.9 release.
 
 ##Link
 * https://dev.zaim.net/home/api
