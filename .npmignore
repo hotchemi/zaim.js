@@ -3,5 +3,7 @@
 .gitignore
 .travis.yml
 .DS_Store
-node_modules/
 example/
+lib-cov/
+node_modules/
+npm-debug.log

@@ -1,4 +1,4 @@
-Zaim.js [![Build Status](https://secure.travis-ci.org/hotchemi/zaim.js.png)](http://travis-ci.org/hotchemi/zaim.js)
+Zaim.js [![Build Status](https://secure.travis-ci.org/hotchemi/zaim.js.png)](http://travis-ci.org/hotchemi/zaim.js) [![Coverage Status](https://coveralls.io/repos/hotchemi/zaim.js/badge.png?branch=master)](https://coveralls.io/r/hotchemi/zaim.js)
 =======
 
 Node.js library for the Zaim API.

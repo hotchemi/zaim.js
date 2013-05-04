@@ -1,6 +1,6 @@
 {
   "name": "zaim",
-  "version": "0.0.9",
+  "version": "1.0.0",
   "author":"Shintaro Katafuchi",
   "readmeFilename": "README.md",
   "description": "Node.js library for the Zaim API.",
@@ -8,10 +8,10 @@
   "homepage": "http://hotchemi.github.io/zaim.js/",
   "keywords":["Zaim","API","Money","node.js"],
   "directories": {
-    "test": "test"
+    "test": "make test"
   },
   "scripts": {
-    "test": "mocha"
+    "test" : "make test-coveralls"
   },
   "repository": {
     "type": "git",
@@ -25,7 +25,10 @@
   },
   "devDependencies": {
     "mocha": "*",
-    "expect.js": "*"
+    "expect.js": "*",
+    "jscoverage" : "0.3.6",
+    "mocha-lcov-reporter" : "0.0.1",
+    "coveralls": "2.0.4"
   },
   "bugs": {
     "url": "https://github.com/hotchemi/zaim.js/issues"
