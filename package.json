@@ -6,11 +6,8 @@
   "description": "Node.js library for the Zaim API.",
   "main": "./lib/zaim",
   "homepage": "http://hotchemi.github.io/zaim.js/",
-  "keywords":["Zaim","API","Money","node.js"],
-  "directories": {
-    "test": "make test"
-  },
-  "scripts": {
+  "keywords":["Zaim","Library","Money"],
+  "scripts" : {
     "test" : "make test-coveralls"
   },
   "repository": {
@@ -28,7 +25,7 @@
     "expect.js": "*",
     "jscoverage" : "0.3.6",
     "mocha-lcov-reporter" : "0.0.1",
-    "coveralls": "2.0.4"
+    "coveralls": "*"
   },
   "bugs": {
     "url": "https://github.com/hotchemi/zaim.js/issues"

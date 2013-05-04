@@ -1,4 +1,4 @@
-Zaim.js [![Build Status](https://secure.travis-ci.org/hotchemi/zaim.js.png)](http://travis-ci.org/hotchemi/zaim.js) [![Coverage Status](https://coveralls.io/repos/hotchemi/zaim.js/badge.png?branch=master)](https://coveralls.io/r/hotchemi/zaim.js)
+Zaim.js [![Build Status](https://secure.travis-ci.org/hotchemi/zaim.js.png)](http://travis-ci.org/hotchemi/zaim.js) [![Coverage Status](https://coveralls.io/repos/hotchemi/zaim.js/badge.png?branch=master)](https://coveralls.io/r/hotchemi/zaim.js) [![NPM version](https://badge.fury.io/js/zaim.png)](http://badge.fury.io/js/zaim)
 =======
 
 Node.js library for the Zaim API.
@@ -146,14 +146,12 @@ zaim.getCurrencies(function(data, err) {
 ```
 ##Test
 
-    $ npm test
+    $ npm install && mocha
 
 ## Release note
 * 2013/04/09 0.0.1 release.
-* 2013/04/30 0.0.7 release.
-* 2013/04/30 0.0.9 release.
+* 2013/05/05 0.0.9 release.
 
 ##Link
-* https://dev.zaim.net/home/api
-* https://npmjs.org/package/zaim
-* http://hotchemi.github.io/zaim.js
+* [Zaim API doc](https://dev.zaim.net/home/api)
+* [GitHub Pages](http://hotchemi.github.io/zaim.js)

@@ -1,5 +1,6 @@
-var expect = require('expect.js'),
-  Zaim = require('../lib/zaim');
+var dir = process.env.ZAIM_COVERAGE ? '../lib-cov/' : '../lib/',
+  Zaim = require(dir + 'zaim'),
+  expect = require('expect.js');
 
 describe('Constructor suite', function() {
   it('should throw a error without consumer key and secret', function() {

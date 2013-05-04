@@ -3,4 +3,5 @@
 example/
 lib-cov/
 node_modules/
+coverage.html
 npm-debug.log
