@@ -46,7 +46,7 @@ zaim.setAccessTokenSecret('accessTokenSecret');
 ```
 ###User
 ```javascript
-zaim.getCredentials(function(data, err) {
+zaim.getCredentials(function(data) {
   console.log(data);
 });
 ```
@@ -59,7 +59,7 @@ zaim.createPay({
   date: '2013-04-10',
   comment: 'comment: memo (within 100 characters)',
   active: 'public or private（0:private 1:public, default is 0）'
-}, function(data, err){
+}, function(data){
   console.log(data);
 });
 ```
@@ -71,7 +71,7 @@ zaim.createIncome({
   date: '2013-04-10',
   comment: 'comment: memo (within 100 characters)',
   active: 'public or private（0:private 1:public, default is 0）'
-}, function(data, err){
+}, function(data){
   console.log(data);
 });
 ```
@@ -92,7 +92,7 @@ zaim.getMoney({
 ```
 or
 ```javascript
-zaim.getMoney(function(data, err) {
+zaim.getMoney(function(data) {
   console.log(data);
 });
 ```
@@ -100,13 +100,13 @@ zaim.getMoney(function(data, err) {
 ```javascript
 zaim.getPayCategories({
   lang: 'If you set this parameter with "ja", response title becomes Japanese.'
-}, function(data, err) {
+}, function(data) {
   console.log(data);
 });
 ```
 or
 ```javascript
-zaim.getPayCategories(function(data, err) {
+zaim.getPayCategories(function(data) {
   console.log(data);
 });
 ```
@@ -114,13 +114,13 @@ zaim.getPayCategories(function(data, err) {
 ```javascript
 zaim.getIncomeCategories({
   lang: 'If you set this parameter with "ja", response title becomes Japanese.'
-}, function(data, err) {
+}, function(data) {
   console.log(data);
 });
 ```
 or
 ```javascript
-zaim.getIncomeCategories(function(data, err) {
+zaim.getIncomeCategories(function(data) {
   console.log(data);
 });
 ```
@@ -128,19 +128,19 @@ zaim.getIncomeCategories(function(data, err) {
 ```javascript
 zaim.getPayGenres({
   lang: 'If you set this parameter with "ja", response title becomes Japanese.'
-}, function(data, err) {
+}, function(data) {
   console.log(data);
 });
 ```
 or
 ```javascript
-zaim.getPayGenres(function(data, err) {
+zaim.getPayGenres(function(data) {
   console.log(data);
 });
 ```
 ###Get currencies
 ```javascript
-zaim.getCurrencies(function(data, err) {
+zaim.getCurrencies(function(data) {
   console.log(data);
 });
 ```
@@ -151,6 +151,7 @@ zaim.getCurrencies(function(data, err) {
 ## Release note
 * 2013/04/09 0.0.1 release.
 * 2013/05/05 0.0.9 release.
+* 2013/05/10 1.0.0 release.
 
 ##Link
 * [Zaim API doc](https://dev.zaim.net/home/api)

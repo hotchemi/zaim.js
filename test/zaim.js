@@ -101,7 +101,7 @@ describe('createPay suite', function() {
       consumerSecret: 'consumerSecret'
     });
     expect(function() {
-      zaim.createPay({}, function(data, err){});
+      zaim.createPay({}, function(data){});
     }).to.throwError(function(e) {
         expect(e.message).to.equal('Invalid parameters.category_id, genre_id and price are necessary.');
       });
@@ -133,7 +133,7 @@ describe('createIncome suite', function() {
       consumerSecret: 'consumerSecret'
     });
     expect(function() {
-      zaim.createIncome({}, function(data, err){});
+      zaim.createIncome({}, function(data){});
     }).to.throwError(function(e) {
         expect(e.message).to.equal('Invalid parameters.category_id and price are necessary.');
       });
@@ -163,7 +163,7 @@ describe('private method suite', function() {
       consumerSecret: 'consumerSecret'
     });
     expect(function() {
-      zaim._httpGet("http://zaim.net", function(data, err){});
+      zaim._httpGet("http://zaim.net", function(data){});
     }).to.throwError(function(e) {
         expect(e.message).to.equal('accessToken and tokenSecret must be configured.');
       });
@@ -176,7 +176,7 @@ describe('private method suite', function() {
       accessToken: 'accessToken'
     });
     expect(function() {
-      zaim._httpGet("http://zaim.net/", function(data, err){});
+      zaim._httpGet("http://zaim.net/", function(data){});
     }).to.throwError(function(e) {
         expect(e.message).to.equal('accessToken and tokenSecret must be configured.');
       });
@@ -189,7 +189,7 @@ describe('private method suite', function() {
       accessTokenSecret: 'accessTokenSecret'
     });
     expect(function() {
-      zaim._httpPost("http://zaim.net/", {}, function(data, err){});
+      zaim._httpPost("http://zaim.net/", {}, function(data){});
     }).to.throwError(function(e) {
         expect(e.message).to.equal('accessToken and tokenSecret must be configured.');
       });
@@ -203,7 +203,7 @@ describe('private method suite', function() {
       accessTokenSecret: 'accessTokenSecret'
     });
     expect(function() {
-      zaim._httpPost("http://zaim.net/", {}, function(data, err){});
+      zaim._httpPost("http://zaim.net/", {}, function(data){});
     }).to.not.throwError();
   });
 
