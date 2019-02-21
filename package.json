@@ -1,37 +1,44 @@
 {
   "name": "zaim",
   "version": "1.0.0",
-  "author":"Shintaro Katafuchi",
+  "author": "Shintaro Katafuchi",
   "readmeFilename": "README.md",
   "description": "Node.js library for the Zaim API.",
   "main": "./lib/zaim",
   "homepage": "http://hotchemi.github.io/zaim.js/",
-  "keywords":["Zaim","Library","Money"],
-  "scripts" : {
-    "test" : "make test-coveralls"
+  "keywords": [
+    "Zaim",
+    "Library",
+    "Money"
+  ],
+  "scripts": {
+    "test": "make test-coveralls"
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/hotchemi/zaim.js.git"
   },
-  "engines":{
-    "node":">= 0.8.0"
+  "engines": {
+    "node": ">= 0.8.0"
   },
   "dependencies": {
     "oauth": "*"
   },
   "devDependencies": {
-    "mocha": "*",
+    "coveralls": "*",
     "expect.js": "*",
-    "jscoverage" : "0.3.6",
-    "mocha-lcov-reporter" : "0.0.1",
-    "coveralls": "*"
+    "jscoverage": "0.3.6",
+    "mocha": "*",
+    "mocha-lcov-reporter": "0.0.1",
+    "readline-sync": "^1.4.9"
   },
   "bugs": {
     "url": "https://github.com/hotchemi/zaim.js/issues"
   },
-  "licenses":[{
-    "type":"MIT",
-    "url":"https://github.com/hotchemi/zaim.js/blob/master/LICENSE"
-  }]
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/hotchemi/zaim.js/blob/master/LICENSE"
+    }
+  ]
 }
