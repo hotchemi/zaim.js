@@ -12,7 +12,7 @@
     "Money"
   ],
   "scripts": {
-    "test": "make test-coveralls"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
