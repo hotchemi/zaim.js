@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-- 0.8
+  - "8"
 env:
   global:
     secure: fUd88QDsxQ/UKZSfPtSrkIPWTKn33ozBACkPsb1Uya/NSrVF1tiC+jS17GaBoJ0TWlPmtkADU6luisQ7q2CpXHsVSaEcZVVo3ETyihHLxP01h54pybrF4mhjadhWsz7JZ5WVeU6d+zk+G0280EI1wWsQicBTQWMcoYB5QWZeBRo=
@@ -10,8 +10,8 @@ deploy:
   skip_cleanup: true
   provider: script
   script:
-  - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
-  - npm publish
+    - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+    - npm publish
   on:
     tags: true
     repo: hotchemi/zaim.js
