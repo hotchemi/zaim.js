@@ -1,13 +1,17 @@
 /**
  * Module dependencies.
  */
-var oauth = require("oauth");
-
-type RequestCallbackFunction = (
-  { statusCode: number, data: any },
-  data: any,
-  response: any
-) => void;
+const oauth: any = require("oauth");
+type ErrorObject = { statusCode: number; data: any };
+type RequestCallbackFunction = (data: any) => void;
+type AuthParams = {
+  consumerKey: string;
+  consumerSecret: string;
+  accessToken: string;
+  accessTokenSecret: string;
+  callback: RequestCallbackFunction;
+};
+type ItemType = "payment" | "income" | "transfer";
 /**
  * Constructor.
  *
@@ -20,7 +24,8 @@ export default class Zaim {
   secret: string;
   callback: RequestCallbackFunction;
   client = oauth.OAuth;
-  constructor(params) {
+
+  constructor(params: AuthParams) {
     if (!params.consumerKey || !params.consumerSecret) {
       throw new Error("ConsumerKey and secret must be configured.");
     }
@@ -46,14 +51,18 @@ export default class Zaim {
    *
    * @param {Function} callback
    */
-  getAuthorizationUrl(callback) {
+  getAuthorizationUrl(callback: (url: string) => void) {
     var that = this;
     if (!this.consumerKey || !this.consumerSecret || !this.callback) {
       throw new Error(
         "ConsumerKey, secret and callback url must be configured."
       );
     }
-    this.client.getOAuthRequestToken(function(err, token, secret) {
+    this.client.getOAuthRequestToken(function(
+      err: ErrorObject,
+      token: string,
+      secret: string
+    ) {
       that.token = token;
       that.secret = secret;
       callback("https://auth.zaim.net/users/auth?oauth_token=" + that.token);
@@ -66,7 +75,7 @@ export default class Zaim {
    * @param {string} pin
    * @param {Function} callback
    */
-  getOAuthAccessToken(pin, callback) {
+  getOAuthAccessToken(pin: string, callback: RequestCallbackFunction) {
     if (!this.consumerKey || !this.consumerSecret) {
       throw new Error("ConsumerKey and secret must be configured.");
     }
@@ -78,7 +87,7 @@ export default class Zaim {
    *
    * @param {string} token
    */
-  setAccessToken(token) {
+  setAccessToken(token: string) {
     this.token = token;
   }
 
@@ -87,7 +96,7 @@ export default class Zaim {
    *
    * @param {string} secret
    */
-  setAccessTokenSecret(secret) {
+  setAccessTokenSecret(secret: string) {
     this.secret = secret;
   }
 
@@ -96,7 +105,7 @@ export default class Zaim {
    *
    * @param {function} callback
    */
-  verify(callback) {
+  verify(callback: RequestCallbackFunction) {
     var url = "https://api.zaim.net/v2/home/user/verify";
     this._httpGet(url, {}, callback);
   }
@@ -107,7 +116,20 @@ export default class Zaim {
    * @param {object} params
    * @param {Function} callback
    */
-  createPay(params, callback) {
+  createPay(
+    params: {
+      mapping?: 1;
+      category_id: number;
+      genre_id: number;
+      amount: number;
+      date: Date;
+      from_account_id?: number;
+      comment?: string;
+      name?: string;
+      place?: string;
+    },
+    callback: RequestCallbackFunction
+  ) {
     var url = "https://api.zaim.net/v2/home/money/payment";
     params.date = params.date || this._getCurrentDate();
     if (!params.category_id || !params.genre_id || !params.amount) {
@@ -127,7 +149,18 @@ export default class Zaim {
    * @param {object} params
    * @param {Function} callback
    */
-  createIncome(params, callback) {
+  createIncome(
+    params: {
+      mapping?: 1;
+      category_id: number;
+      amount: number;
+      date: Date;
+      to_account_id?: number;
+      place?: string;
+      comment?: string;
+    },
+    callback: RequestCallbackFunction
+  ) {
     var url = "https://api.zaim.net/v2/home/money/income";
     params.date = params.date || this._getCurrentDate();
     if (!params.category_id || !params.amount) {
@@ -146,7 +179,17 @@ export default class Zaim {
    * @param {object} params
    * @param {Function} callback
    */
-  createTransfer(params, callback) {
+  createTransfer(
+    params: {
+      mapping?: 1;
+      amount: number;
+      date: Date;
+      from_account_id: number;
+      to_account_id: number;
+      comment?: string;
+    },
+    callback: RequestCallbackFunction
+  ) {
     var url = "https://api.zaim.net/v2/home/money/transfer";
     params.date = params.date || this._getCurrentDate();
     if (!params.from_account_id || !params.to_account_id || !params.amount) {
@@ -168,7 +211,21 @@ export default class Zaim {
    * @param {object} params
    * @param {Function} callback
    */
-  updateMoney(itemType, itemId, params, callback) {
+  updateMoney(
+    itemType: ItemType,
+    itemId: number,
+    params: {
+      mapping?: 1;
+      amount: number;
+      date: Date;
+      from_account_id?: number;
+      to_account_id?: number;
+      genre_id?: number;
+      category_id?: number;
+      comment?: string;
+    },
+    callback: RequestCallbackFunction
+  ) {
     if (
       !(
         itemType === "payment" ||
@@ -198,7 +255,11 @@ export default class Zaim {
    * @param {string} itemId
    * @param {Function} callback
    */
-  deleteMoney(itemType, itemId, callback) {
+  deleteMoney(
+    itemType: ItemType,
+    itemId: number,
+    callback: RequestCallbackFunction
+  ) {
     if (
       !(
         itemType === "payment" ||
@@ -218,12 +279,22 @@ export default class Zaim {
    * @param {object} params
    * @param {Function} callback
    */
-  getMoney(params, callback) {
+  getMoney(
+    params: {
+      mapping?: 1;
+      category_id?: number;
+      genre_id?: number;
+      mode?: ItemType;
+      order?: "id" | "date";
+      start_date?: Date;
+      end_date?: Date;
+      page?: number;
+      limit?: number;
+      group_by?: "receipt_id";
+    },
+    callback: RequestCallbackFunction
+  ) {
     var url = "https://api.zaim.net/v2/home/money";
-    if (arguments.length === 1) {
-      callback = params;
-      params = {};
-    }
     if (!params.mapping) {
       params.mapping = 1;
     }
@@ -236,16 +307,9 @@ export default class Zaim {
    * @param {object} params
    * @param {Function} callback
    */
-  getCategories(params, callback) {
+  getCategories(callback: RequestCallbackFunction) {
     var url = "https://api.zaim.net/v2/home/category";
-    if (arguments.length === 1) {
-      callback = params;
-      params = {};
-    }
-    if (!params.mapping) {
-      params.mapping = 1;
-    }
-    this._httpGet(url, params, callback);
+    this._httpGet(url, {}, callback);
   }
 
   /**
@@ -253,7 +317,7 @@ export default class Zaim {
    *
    * @param {function} callback
    */
-  getCurrencies(callback) {
+  getCurrencies(callback: RequestCallbackFunction) {
     var url = "https://api.zaim.net/v2/currency";
     this._httpGet(url, {}, callback);
   }
@@ -265,7 +329,7 @@ export default class Zaim {
    * @param {string} url
    * @param {Function} callback
    */
-  _httpGet(url, params, callback) {
+  _httpGet(url: string, params: any, callback: RequestCallbackFunction) {
     if (!this.token || !this.secret) {
       throw new Error("accessToken and tokenSecret must be configured.");
     }
@@ -274,7 +338,10 @@ export default class Zaim {
       url += key + "=" + params[key] + "&";
     });
     url.slice(0, -1);
-    this.client.get(url, this.token, this.secret, function(err, data) {
+    this.client.get(url, this.token, this.secret, function(
+      err: any,
+      data: any
+    ) {
       if (err) {
         throw err;
       } else {
@@ -291,11 +358,14 @@ export default class Zaim {
    * @param {object} params
    * @param {Function} callback
    */
-  _httpPost(url, params, callback) {
+  _httpPost(url: string, params: any, callback: RequestCallbackFunction) {
     if (!this.token || !this.secret) {
       throw new Error("accessToken and tokenSecret must be configured.");
     }
-    this.client.post(url, this.token, this.secret, params, function(err, data) {
+    this.client.post(url, this.token, this.secret, params, function(
+      err: any,
+      data: any
+    ) {
       if (err) {
         throw err;
       } else {
@@ -311,11 +381,14 @@ export default class Zaim {
    * @param {object} params
    * @param {Function} callback
    */
-  _httpPut(url, params, callback) {
+  _httpPut(url: string, params: any, callback: RequestCallbackFunction) {
     if (!this.token || !this.secret) {
       throw new Error("accessToken and tokenSecret must be configured.");
     }
-    this.client.put(url, this.token, this.secret, params, function(err, data) {
+    this.client.put(url, this.token, this.secret, params, function(
+      err: any,
+      data: any
+    ) {
       if (err) {
         throw err;
       } else {
@@ -330,11 +403,14 @@ export default class Zaim {
    * @param {string} url
    * @param {Function} callback
    */
-  _httpDelete(url, callback) {
+  _httpDelete(url: string, callback: RequestCallbackFunction) {
     if (!this.token || !this.secret) {
       throw new Error("accessToken and tokenSecret must be configured.");
     }
-    this.client.delete(url, this.token, this.secret, function(err, data) {
+    this.client.delete(url, this.token, this.secret, function(
+      err: any,
+      data: any
+    ) {
       if (err) {
         throw err;
       } else {
