@@ -1,5 +1,5 @@
 var dir = process.env.ZAIM_COVERAGE ? "../lib-cov/" : "../lib/",
-  Zaim = require(dir + "zaim"),
+  Zaim = require(dir + "zaim").default,
   expect = require("expect.js");
 
 describe("Constructor suite", function() {
