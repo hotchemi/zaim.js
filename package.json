@@ -1,6 +1,6 @@
 {
   "name": "zaim",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "author": "Shintaro Katafuchi",
   "readmeFilename": "README.md",
   "description": "Node.js library for the Zaim API.",
