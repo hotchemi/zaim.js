@@ -12,6 +12,7 @@
     "Money"
   ],
   "scripts": {
+    "build": "tsc",
     "test": "mocha"
   },
   "repository": {
@@ -25,12 +26,15 @@
     "oauth": "*"
   },
   "devDependencies": {
+    "@types/node": "^11.9.5",
     "coveralls": "*",
     "expect.js": "*",
     "jscoverage": "0.3.6",
     "mocha": "*",
     "mocha-lcov-reporter": "0.0.1",
-    "readline-sync": "^1.4.9"
+    "node": "^11.10.0",
+    "readline-sync": "^1.4.9",
+    "typescript": "^3.3.3333"
   },
   "bugs": {
     "url": "https://github.com/hotchemi/zaim.js/issues"

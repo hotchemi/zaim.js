@@ -5,3 +5,5 @@ lib-cov/
 node_modules/
 coverage.html
 npm-debug.log
+/lib/zaim.js
+/lib/zaim.d.ts

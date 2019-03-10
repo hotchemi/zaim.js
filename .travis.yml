@@ -5,7 +5,9 @@ env:
   global:
     secure: fUd88QDsxQ/UKZSfPtSrkIPWTKn33ozBACkPsb1Uya/NSrVF1tiC+jS17GaBoJ0TWlPmtkADU6luisQ7q2CpXHsVSaEcZVVo3ETyihHLxP01h54pybrF4mhjadhWsz7JZ5WVeU6d+zk+G0280EI1wWsQicBTQWMcoYB5QWZeBRo=
 install: npm install
-script: npm test
+script:
+  - npx tsc
+  - npm test
 deploy:
   skip_cleanup: true
   provider: script
