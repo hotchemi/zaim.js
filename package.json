@@ -4,7 +4,8 @@
   "author": "Shintaro Katafuchi",
   "readmeFilename": "README.md",
   "description": "Node.js library for the Zaim API.",
-  "main": "./lib/zaim",
+  "main": "./lib/zaim.js",
+  "types": "./lib/zaim.d.ts",
   "homepage": "http://hotchemi.github.io/zaim.js/",
   "keywords": [
     "Zaim",
