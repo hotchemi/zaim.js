@@ -16,4 +16,5 @@ deploy:
     - npm publish
   on:
     tags: true
+    branch: master
     repo: hotchemi/zaim.js
