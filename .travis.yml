@@ -12,8 +12,7 @@ deploy:
   skip_cleanup: true
   provider: script
   script:
-    - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ./.npmrc
-    - npm publish
+    - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ./.npmrc && npm publish
   on:
     tags: true
     branch: master
