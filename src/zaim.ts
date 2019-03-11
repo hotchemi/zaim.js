@@ -22,7 +22,6 @@ export default class Zaim {
   consumerSecret: string;
   token: string;
   secret: string;
-  callback: string;
   client = oauth.OAuth;
 
   constructor(params: AuthParams) {
@@ -34,14 +33,13 @@ export default class Zaim {
     this.consumerSecret = params.consumerSecret;
     this.token = params.accessToken;
     this.secret = params.accessTokenSecret;
-    this.callback = params.callback;
     this.client = new oauth.OAuth(
       "https://api.zaim.net/v2/auth/request",
       "https://api.zaim.net/v2/auth/access",
       this.consumerKey,
       this.consumerSecret,
       "1.0",
-      this.callback,
+      params.callback,
       "HMAC-SHA1"
     );
   }
@@ -53,10 +51,8 @@ export default class Zaim {
    */
   getAuthorizationUrl(callback: (url: string) => void) {
     var that = this;
-    if (!this.consumerKey || !this.consumerSecret || !this.callback) {
-      throw new Error(
-        "ConsumerKey, secret and callback url must be configured."
-      );
+    if (!this.consumerKey || !this.consumerSecret) {
+      throw new Error("ConsumerKey and secret must be configured.");
     }
     this.client.getOAuthRequestToken(function(
       err: ErrorObject,
