@@ -9,7 +9,7 @@ type AuthParams = {
   consumerSecret: string;
   accessToken?: string;
   accessTokenSecret?: string;
-  callback: string;
+  callback?: string;
 };
 type ItemType = "payment" | "income" | "transfer";
 /**
@@ -31,9 +31,12 @@ export default class Zaim {
 
     this.consumerKey = params.consumerKey;
     this.consumerSecret = params.consumerSecret;
+
     if (params.accessToken && params.accessTokenSecret) {
       this.token = params.accessToken;
       this.secret = params.accessTokenSecret;
+    } else if (!params.callback) {
+      throw new Error("Callback url must be configured.");
     }
     this.client = new oauth.OAuth(
       "https://api.zaim.net/v2/auth/request",
