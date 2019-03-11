@@ -310,7 +310,29 @@ export default class Zaim {
    */
   getCategories(callback: RequestCallbackFunction) {
     var url = "https://api.zaim.net/v2/home/category";
-    this._httpGet(url, {}, callback);
+    this._httpGet(url, { mapping: 1 }, callback);
+  }
+
+  /**
+   * Get payment genre.
+   *
+   * @param {object} params
+   * @param {Function} callback
+   */
+  getGenre(callback: RequestCallbackFunction) {
+    var url = "https://api.zaim.net/v2/home/genre";
+    this._httpGet(url, { mapping: 1 }, callback);
+  }
+
+  /**
+   * Get accounts.
+   *
+   * @param {object} params
+   * @param {Function} callback
+   */
+  getAccounts(callback: RequestCallbackFunction) {
+    var url = "https://api.zaim.net/v2/home/account";
+    this._httpGet(url, { mapping: 1 }, callback);
   }
 
   /**
