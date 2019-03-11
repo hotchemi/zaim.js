@@ -9,7 +9,7 @@ type AuthParams = {
   consumerSecret: string;
   accessToken: string;
   accessTokenSecret: string;
-  callback: RequestCallbackFunction;
+  callback: string;
 };
 type ItemType = "payment" | "income" | "transfer";
 /**
@@ -22,7 +22,7 @@ export default class Zaim {
   consumerSecret: string;
   token: string;
   secret: string;
-  callback: RequestCallbackFunction;
+  callback: string;
   client = oauth.OAuth;
 
   constructor(params: AuthParams) {
