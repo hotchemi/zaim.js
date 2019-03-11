@@ -7,8 +7,8 @@ type RequestCallbackFunction = (data: any) => void;
 type AuthParams = {
   consumerKey: string;
   consumerSecret: string;
-  accessToken: string;
-  accessTokenSecret: string;
+  accessToken?: string;
+  accessTokenSecret?: string;
   callback: string;
 };
 type ItemType = "payment" | "income" | "transfer";
@@ -20,8 +20,8 @@ type ItemType = "payment" | "income" | "transfer";
 export default class Zaim {
   consumerKey: string;
   consumerSecret: string;
-  token: string;
-  secret: string;
+  token!: string;
+  secret!: string;
   client = oauth.OAuth;
 
   constructor(params: AuthParams) {
@@ -31,8 +31,10 @@ export default class Zaim {
 
     this.consumerKey = params.consumerKey;
     this.consumerSecret = params.consumerSecret;
-    this.token = params.accessToken;
-    this.secret = params.accessTokenSecret;
+    if (params.accessToken && params.accessTokenSecret) {
+      this.token = params.accessToken;
+      this.secret = params.accessTokenSecret;
+    }
     this.client = new oauth.OAuth(
       "https://api.zaim.net/v2/auth/request",
       "https://api.zaim.net/v2/auth/access",
