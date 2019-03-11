@@ -14,7 +14,8 @@ describe("Constructor suite", function() {
   it("should throw a error without consumer secret", function() {
     expect(function() {
       new Zaim({
-        consumerKey: "consumerKey"
+        consumerKey: "consumerKey",
+        callback: "http://zaim.net"
       });
     }).to.throwError();
   });
@@ -22,7 +23,8 @@ describe("Constructor suite", function() {
   it("should throw a error without consumer key", function() {
     expect(function() {
       new Zaim({
-        consumerSecret: "consumerSecret"
+        consumerSecret: "consumerSecret",
+        callback: "http://zaim.net"
       });
     }).to.throwError();
   });
@@ -31,27 +33,60 @@ describe("Constructor suite", function() {
     expect(function() {
       new Zaim({
         consumerKey: "consumerKey",
+        consumerSecret: "consumerSecret",
+        callback: "http://zaim.net"
+      });
+    }).to.not.throwError();
+  });
+
+  it("should throw error without callback", function() {
+    expect(function() {
+      new Zaim({
+        consumerKey: "consumerKey",
         consumerSecret: "consumerSecret"
+      });
+    }).to.throwError(function(e) {
+      expect(e.message).to.equal("Callback url must be configured.");
+    });
+  });
+
+  it("should throw error without callback when only accessToken is given", function() {
+    expect(function() {
+      new Zaim({
+        consumerKey: "consumerKey",
+        consumerSecret: "consumerSecret",
+        accessToken: "accessToken"
+      });
+    }).to.throwError(function(e) {
+      expect(e.message).to.equal("Callback url must be configured.");
+    });
+  });
+
+  it("should throw error without callback when only accessTokenSecret is given", function() {
+    expect(function() {
+      new Zaim({
+        consumerKey: "consumerKey",
+        consumerSecret: "consumerSecret",
+        accessTokenSecret: "accessTokenSecret"
+      });
+    }).to.throwError(function(e) {
+      expect(e.message).to.equal("Callback url must be configured.");
+    });
+  });
+
+  it("should not throw error even when callback is missing if accessToken and accessTokenSecret are given", function() {
+    expect(function() {
+      new Zaim({
+        consumerKey: "consumerKey",
+        consumerSecret: "consumerSecret",
+        accessToken: "accessToken",
+        accessTokenSecret: "accessTokenSecret"
       });
     }).to.not.throwError();
   });
 });
 
 describe("getAuthorizationUrl() suite", function() {
-  it("should throw error without callback", function() {
-    var zaim = new Zaim({
-      consumerKey: "consumerKey",
-      consumerSecret: "consumerSecret"
-    });
-    expect(function() {
-      zaim.getAuthorizationUrl();
-    }).to.throwError(function(e) {
-      expect(e.message).to.equal(
-        "ConsumerKey, secret and callback url must be configured."
-      );
-    });
-  });
-
   it("should not throw error with valid parameters", function() {
     var zaim = new Zaim({
       consumerKey: "consumerKey",
@@ -82,7 +117,8 @@ describe("setter suite", function() {
   it("should equal accessToken", function() {
     var zaim = new Zaim({
       consumerKey: "consumerKey",
-      consumerSecret: "consumerSecret"
+      consumerSecret: "consumerSecret",
+      callback: "http://zaim.net"
     });
     zaim.setAccessToken("accessToken");
     expect(zaim.token).to.equal("accessToken");
@@ -91,7 +127,8 @@ describe("setter suite", function() {
   it("should equal accessTokenSecret", function() {
     var zaim = new Zaim({
       consumerKey: "consumerKey",
-      consumerSecret: "consumerSecret"
+      consumerSecret: "consumerSecret",
+      callback: "http://zaim.net"
     });
     zaim.setAccessTokenSecret("accessTokenSecret");
     expect(zaim.secret).to.equal("accessTokenSecret");
@@ -102,7 +139,8 @@ describe("createPay suite", function() {
   it("should throw error with empty params", function() {
     var zaim = new Zaim({
       consumerKey: "consumerKey",
-      consumerSecret: "consumerSecret"
+      consumerSecret: "consumerSecret",
+      callback: "http://zaim.net"
     });
     expect(function() {
       zaim.createPay({}, function(data) {});
@@ -116,7 +154,8 @@ describe("createPay suite", function() {
   it("with valid parameters", function() {
     var zaim = new Zaim({
       consumerKey: "consumerKey",
-      consumerSecret: "consumerSecret"
+      consumerSecret: "consumerSecret",
+      callback: "http://zaim.net"
     });
     // throw error because set invalid consumer key and secret.
     expect(function() {
@@ -141,7 +180,8 @@ describe("createIncome suite", function() {
   it("should throw error with empty params", function() {
     var zaim = new Zaim({
       consumerKey: "consumerKey",
-      consumerSecret: "consumerSecret"
+      consumerSecret: "consumerSecret",
+      callback: "http://zaim.net"
     });
     expect(function() {
       zaim.createIncome({}, function(data) {});
@@ -155,7 +195,8 @@ describe("createIncome suite", function() {
   it("with valid parameters", function() {
     var zaim = new Zaim({
       consumerKey: "consumerKey",
-      consumerSecret: "consumerSecret"
+      consumerSecret: "consumerSecret",
+      callback: "http://zaim.net"
     });
     expect(function() {
       zaim.createIncome(
@@ -178,7 +219,8 @@ describe("private method suite", function() {
   it("should throw error without access token and secret", function() {
     var zaim = new Zaim({
       consumerKey: "consumerKey",
-      consumerSecret: "consumerSecret"
+      consumerSecret: "consumerSecret",
+      callback: "http://zaim.net"
     });
     expect(function() {
       zaim._httpGet("http://zaim.net", function(data) {});
@@ -193,7 +235,8 @@ describe("private method suite", function() {
     var zaim = new Zaim({
       consumerKey: "consumerKey",
       consumerSecret: "consumerSecret",
-      accessToken: "accessToken"
+      accessToken: "accessToken",
+      callback: "http://zaim.net"
     });
     expect(function() {
       zaim._httpGet("http://zaim.net/", function(data) {});
@@ -208,7 +251,8 @@ describe("private method suite", function() {
     var zaim = new Zaim({
       consumerKey: "consumerKey",
       consumerSecret: "consumerSecret",
-      accessTokenSecret: "accessTokenSecret"
+      accessTokenSecret: "accessTokenSecret",
+      callback: "http://zaim.net"
     });
     expect(function() {
       zaim._httpPost("http://zaim.net/", {}, function(data) {});
