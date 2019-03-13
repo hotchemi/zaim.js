@@ -2,6 +2,12 @@
  * Module dependencies.
  */
 const oauth: any = require("oauth");
+import { promisify } from "util";
+import {
+  clientGetOAuthRequestTokenOverride,
+  clientGetOAuthAccessTokenOverride
+} from "./promisify-override";
+
 type ErrorObject = { statusCode: number; data: any };
 type RequestCallbackFunction = (data: any) => void;
 type AuthParams = {
@@ -47,6 +53,13 @@ export default class Zaim {
       params.callback,
       "HMAC-SHA1"
     );
+
+    this.client.getOAuthRequestToken[
+      promisify.custom
+    ] = clientGetOAuthRequestTokenOverride;
+    this.client.getOAuthAccessToken[
+      promisify.custom
+    ] = clientGetOAuthAccessTokenOverride;
   }
 
   /**
@@ -71,6 +84,21 @@ export default class Zaim {
   }
 
   /**
+   * Get authorization url.
+   */
+  async getAuthorizationUrlAsync(): Promise<string> {
+    if (!this.consumerKey || !this.consumerSecret) {
+      throw new Error("ConsumerKey and secret must be configured.");
+    }
+    const { token, secret } = await promisify(
+      this.client.getOAuthRequestToken
+    ).bind(this.client)();
+    this.token = token;
+    this.secret = secret;
+    return "https://auth.zaim.net/users/auth?oauth_token=" + this.token;
+  }
+
+  /**
    * Get oauth access token.
    *
    * @param {string} pin
@@ -81,6 +109,22 @@ export default class Zaim {
       throw new Error("ConsumerKey and secret must be configured.");
     }
     this.client.getOAuthAccessToken(this.token, this.secret, pin, callback);
+  }
+
+  /**
+   * Get oauth access token.
+   *
+   * @param {string} pin
+   */
+  async getOAuthAccessTokenAsync(pin: string) {
+    if (!this.consumerKey || !this.consumerSecret) {
+      throw new Error("ConsumerKey and secret must be configured.");
+    }
+    return await promisify(this.client.getOAuthAccessToken).bind(this.client)(
+      this.token,
+      this.secret,
+      pin
+    );
   }
 
   /**
@@ -106,9 +150,10 @@ export default class Zaim {
    *
    * @param {function} callback
    */
-  verify(callback: RequestCallbackFunction) {
+  verify(callback?: RequestCallbackFunction) {
     var url = "https://api.zaim.net/v2/home/user/verify";
-    this._httpGet(url, {}, callback);
+    if (callback) this._httpGet(url, {}, callback);
+    else return this._httpGetAsync(url, {});
   }
 
   /**
@@ -129,7 +174,7 @@ export default class Zaim {
       name?: string;
       place?: string;
     },
-    callback: RequestCallbackFunction
+    callback?: RequestCallbackFunction
   ) {
     var url = "https://api.zaim.net/v2/home/money/payment";
     params.date = params.date || this._getCurrentDate();
@@ -141,7 +186,8 @@ export default class Zaim {
     if (!params.mapping) {
       params.mapping = 1;
     }
-    this._httpPost(url, params, callback);
+    if (callback) this._httpPost(url, params, callback);
+    else return this._httpPostAsync(url, params);
   }
 
   /**
@@ -160,7 +206,7 @@ export default class Zaim {
       place?: string;
       comment?: string;
     },
-    callback: RequestCallbackFunction
+    callback?: RequestCallbackFunction
   ) {
     var url = "https://api.zaim.net/v2/home/money/income";
     params.date = params.date || this._getCurrentDate();
@@ -172,7 +218,8 @@ export default class Zaim {
     if (!params.mapping) {
       params.mapping = 1;
     }
-    this._httpPost(url, params, callback);
+    if (callback) this._httpPost(url, params, callback);
+    else return this._httpPostAsync(url, params);
   }
   /**
    * Create transfer.
@@ -189,7 +236,7 @@ export default class Zaim {
       to_account_id: number;
       comment?: string;
     },
-    callback: RequestCallbackFunction
+    callback?: RequestCallbackFunction
   ) {
     var url = "https://api.zaim.net/v2/home/money/transfer";
     params.date = params.date || this._getCurrentDate();
@@ -201,7 +248,8 @@ export default class Zaim {
     if (!params.mapping) {
       params.mapping = 1;
     }
-    this._httpPost(url, params, callback);
+    if (callback) this._httpPost(url, params, callback);
+    else return this._httpPostAsync(url, params);
   }
 
   /**
@@ -225,7 +273,7 @@ export default class Zaim {
       category_id?: number;
       comment?: string;
     },
-    callback: RequestCallbackFunction
+    callback?: RequestCallbackFunction
   ) {
     if (
       !(
@@ -246,7 +294,8 @@ export default class Zaim {
     if (!params.mapping) {
       params.mapping = 1;
     }
-    this._httpPut(url, params, callback);
+    if (callback) this._httpPut(url, params, callback);
+    else return this._httpPutAsync(url, params);
   }
 
   /**
@@ -259,7 +308,7 @@ export default class Zaim {
   deleteMoney(
     itemType: ItemType,
     itemId: number,
-    callback: RequestCallbackFunction
+    callback?: RequestCallbackFunction
   ) {
     if (
       !(
@@ -271,7 +320,8 @@ export default class Zaim {
       throw new Error("Invalid itemType: " + itemType);
     }
     var url = `https://api.zaim.net/v2/home/money/${itemType}/${itemId}`;
-    this._httpDelete(url, callback);
+    if (callback) this._httpDelete(url, callback);
+    else return this._httpDeleteAsync(url);
   }
 
   /**
@@ -293,13 +343,14 @@ export default class Zaim {
       limit?: number;
       group_by?: "receipt_id";
     },
-    callback: RequestCallbackFunction
+    callback?: RequestCallbackFunction
   ) {
     var url = "https://api.zaim.net/v2/home/money";
     if (!params.mapping) {
       params.mapping = 1;
     }
-    this._httpGet(url, params, callback);
+    if (callback) this._httpGet(url, params, callback);
+    else return this._httpGetAsync(url, params);
   }
 
   /**
@@ -308,9 +359,10 @@ export default class Zaim {
    * @param {object} params
    * @param {Function} callback
    */
-  getCategories(callback: RequestCallbackFunction) {
+  getCategories(callback?: RequestCallbackFunction) {
     var url = "https://api.zaim.net/v2/home/category";
-    this._httpGet(url, { mapping: 1 }, callback);
+    if (callback) this._httpGet(url, { mapping: 1 }, callback);
+    else return this._httpGetAsync(url, { mapping: 1 });
   }
 
   /**
@@ -319,9 +371,10 @@ export default class Zaim {
    * @param {object} params
    * @param {Function} callback
    */
-  getGenre(callback: RequestCallbackFunction) {
+  getGenre(callback?: RequestCallbackFunction) {
     var url = "https://api.zaim.net/v2/home/genre";
-    this._httpGet(url, { mapping: 1 }, callback);
+    if (callback) this._httpGet(url, { mapping: 1 }, callback);
+    else return this._httpGetAsync(url, { mapping: 1 });
   }
 
   /**
@@ -330,9 +383,10 @@ export default class Zaim {
    * @param {object} params
    * @param {Function} callback
    */
-  getAccounts(callback: RequestCallbackFunction) {
+  getAccounts(callback?: RequestCallbackFunction) {
     var url = "https://api.zaim.net/v2/home/account";
-    this._httpGet(url, { mapping: 1 }, callback);
+    if (callback) this._httpGet(url, { mapping: 1 }, callback);
+    else return this._httpGetAsync(url, { mapping: 1 });
   }
 
   /**
@@ -340,9 +394,10 @@ export default class Zaim {
    *
    * @param {function} callback
    */
-  getCurrencies(callback: RequestCallbackFunction) {
+  getCurrencies(callback?: RequestCallbackFunction) {
     var url = "https://api.zaim.net/v2/currency";
-    this._httpGet(url, {}, callback);
+    if (callback) this._httpGet(url, {}, callback);
+    else return this._httpGetAsync(url, {});
   }
 
   /**
@@ -453,5 +508,72 @@ export default class Zaim {
     return (
       date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
     );
+  }
+
+  // Promisified
+
+  /**
+   * Execute http get.
+   *
+   * @api private
+   * @param {string} url
+   * @param {Function} callback
+   */
+  async _httpGetAsync(url: string, params: any): Promise<any> {
+    if (!this.token || !this.secret) {
+      throw new Error("accessToken and tokenSecret must be configured.");
+    }
+    url += "?";
+    Object.keys(params).forEach(function(key) {
+      url += key + "=" + params[key] + "&";
+    });
+    url.slice(0, -1);
+    const clientGetAsync = promisify(this.client.get).bind(this.client);
+    return await clientGetAsync(url, this.token, this.secret);
+  }
+
+  /**
+   * Execute http post.
+   *
+   * @api private
+   * @param {string} url
+   * @param {object} params
+   * @param {Function} callback
+   */
+  async _httpPostAsync(url: string, params: any): Promise<any> {
+    if (!this.token || !this.secret) {
+      throw new Error("accessToken and tokenSecret must be configured.");
+    }
+    const clientPostAsync = promisify(this.client.post).bind(this.client);
+    return await clientPostAsync(url, this.token, this.secret, params);
+  }
+  /**
+   * Execute http put.
+   *
+   * @api private
+   * @param {string} url
+   * @param {object} params
+   * @param {Function} callback
+   */
+  async _httpPutAsync(url: string, params: any): Promise<any> {
+    if (!this.token || !this.secret) {
+      throw new Error("accessToken and tokenSecret must be configured.");
+    }
+    const clientPutAsync = promisify(this.client.put).bind(this.client);
+    return await clientPutAsync(url, this.token, this.secret, params);
+  }
+  /**
+   * Execute http delete.
+   *
+   * @api private
+   * @param {string} url
+   * @param {Function} callback
+   */
+  async _httpDeleteAsync(url: string): Promise<any> {
+    if (!this.token || !this.secret) {
+      throw new Error("accessToken and tokenSecret must be configured.");
+    }
+    const clientDeleteAsync = promisify(this.client.delete).bind(this.client);
+    return await clientDeleteAsync(url, this.token, this.secret);
   }
 }
