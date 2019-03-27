@@ -152,8 +152,8 @@ export default class Zaim {
    */
   verify(callback?: RequestCallbackFunction) {
     var url = "https://api.zaim.net/v2/home/user/verify";
-    if (callback) this._httpGet(url, {}, callback);
-    else return this._httpGetAsync(url, {});
+    if (callback) this.httpGet(url, {}, callback);
+    else return this.httpGetAsync(url, {});
   }
 
   /**
@@ -168,7 +168,7 @@ export default class Zaim {
       category_id: number;
       genre_id: number;
       amount: number;
-      date: Date;
+      date?: Date | string;
       from_account_id?: number;
       comment?: string;
       name?: string;
@@ -177,7 +177,9 @@ export default class Zaim {
     callback?: RequestCallbackFunction
   ) {
     var url = "https://api.zaim.net/v2/home/money/payment";
-    params.date = params.date || this._getCurrentDate();
+    params.date = params.date
+      ? this.formatDate(params.date)
+      : this.getCurrentDate();
     if (!params.category_id || !params.genre_id || !params.amount) {
       throw new Error(
         "Invalid parameters.category_id, genre_id and amount are necessary."
@@ -186,8 +188,8 @@ export default class Zaim {
     if (!params.mapping) {
       params.mapping = 1;
     }
-    if (callback) this._httpPost(url, params, callback);
-    else return this._httpPostAsync(url, params);
+    if (callback) this.httpPost(url, params, callback);
+    else return this.httpPostAsync(url, params);
   }
 
   /**
@@ -201,7 +203,7 @@ export default class Zaim {
       mapping?: 1;
       category_id: number;
       amount: number;
-      date: Date;
+      date?: Date | string;
       to_account_id?: number;
       place?: string;
       comment?: string;
@@ -209,7 +211,9 @@ export default class Zaim {
     callback?: RequestCallbackFunction
   ) {
     var url = "https://api.zaim.net/v2/home/money/income";
-    params.date = params.date || this._getCurrentDate();
+    params.date = params.date
+      ? this.formatDate(params.date)
+      : this.getCurrentDate();
     if (!params.category_id || !params.amount) {
       throw new Error(
         "Invalid parameters.category_id and amount are necessary."
@@ -218,8 +222,8 @@ export default class Zaim {
     if (!params.mapping) {
       params.mapping = 1;
     }
-    if (callback) this._httpPost(url, params, callback);
-    else return this._httpPostAsync(url, params);
+    if (callback) this.httpPost(url, params, callback);
+    else return this.httpPostAsync(url, params);
   }
   /**
    * Create transfer.
@@ -231,7 +235,7 @@ export default class Zaim {
     params: {
       mapping?: 1;
       amount: number;
-      date: Date;
+      date?: Date | string;
       from_account_id: number;
       to_account_id: number;
       comment?: string;
@@ -239,7 +243,9 @@ export default class Zaim {
     callback?: RequestCallbackFunction
   ) {
     var url = "https://api.zaim.net/v2/home/money/transfer";
-    params.date = params.date || this._getCurrentDate();
+    params.date = params.date
+      ? this.formatDate(params.date)
+      : this.getCurrentDate();
     if (!params.from_account_id || !params.to_account_id || !params.amount) {
       throw new Error(
         "Invalid parameters.from_account_id, to_account_id, and amount are necessary."
@@ -248,8 +254,8 @@ export default class Zaim {
     if (!params.mapping) {
       params.mapping = 1;
     }
-    if (callback) this._httpPost(url, params, callback);
-    else return this._httpPostAsync(url, params);
+    if (callback) this.httpPost(url, params, callback);
+    else return this.httpPostAsync(url, params);
   }
 
   /**
@@ -266,7 +272,7 @@ export default class Zaim {
     params: {
       mapping?: 1;
       amount: number;
-      date: Date;
+      date?: Date | string;
       from_account_id?: number;
       to_account_id?: number;
       genre_id?: number;
@@ -285,7 +291,9 @@ export default class Zaim {
       throw new Error("Invalid itemType: " + itemType);
     }
     var url = `https://api.zaim.net/v2/home/money/${itemType}/${itemId}`;
-    params.date = params.date || this._getCurrentDate();
+    params.date = params.date
+      ? this.formatDate(params.date)
+      : this.getCurrentDate();
     if (!params.amount) {
       throw new Error(
         "Invalid parameters.category_id and amount are necessary."
@@ -294,8 +302,8 @@ export default class Zaim {
     if (!params.mapping) {
       params.mapping = 1;
     }
-    if (callback) this._httpPut(url, params, callback);
-    else return this._httpPutAsync(url, params);
+    if (callback) this.httpPut(url, params, callback);
+    else return this.httpPutAsync(url, params);
   }
 
   /**
@@ -320,8 +328,8 @@ export default class Zaim {
       throw new Error("Invalid itemType: " + itemType);
     }
     var url = `https://api.zaim.net/v2/home/money/${itemType}/${itemId}`;
-    if (callback) this._httpDelete(url, callback);
-    else return this._httpDeleteAsync(url);
+    if (callback) this.httpDelete(url, callback);
+    else return this.httpDeleteAsync(url);
   }
 
   /**
@@ -337,8 +345,8 @@ export default class Zaim {
       genre_id?: number;
       mode?: ItemType;
       order?: "id" | "date";
-      start_date?: Date;
-      end_date?: Date;
+      start_date?: Date | string;
+      end_date?: Date | string;
       page?: number;
       limit?: number;
       group_by?: "receipt_id";
@@ -349,8 +357,14 @@ export default class Zaim {
     if (!params.mapping) {
       params.mapping = 1;
     }
-    if (callback) this._httpGet(url, params, callback);
-    else return this._httpGetAsync(url, params);
+    params.start_date = params.start_date
+      ? this.formatDate(params.start_date)
+      : this.getCurrentDate();
+    params.end_date = params.end_date
+      ? this.formatDate(params.end_date)
+      : this.getCurrentDate();
+    if (callback) this.httpGet(url, params, callback);
+    else return this.httpGetAsync(url, params);
   }
 
   /**
@@ -361,8 +375,8 @@ export default class Zaim {
    */
   getCategories(callback?: RequestCallbackFunction) {
     var url = "https://api.zaim.net/v2/home/category";
-    if (callback) this._httpGet(url, { mapping: 1 }, callback);
-    else return this._httpGetAsync(url, { mapping: 1 });
+    if (callback) this.httpGet(url, { mapping: 1 }, callback);
+    else return this.httpGetAsync(url, { mapping: 1 });
   }
 
   /**
@@ -373,8 +387,8 @@ export default class Zaim {
    */
   getGenre(callback?: RequestCallbackFunction) {
     var url = "https://api.zaim.net/v2/home/genre";
-    if (callback) this._httpGet(url, { mapping: 1 }, callback);
-    else return this._httpGetAsync(url, { mapping: 1 });
+    if (callback) this.httpGet(url, { mapping: 1 }, callback);
+    else return this.httpGetAsync(url, { mapping: 1 });
   }
 
   /**
@@ -385,8 +399,8 @@ export default class Zaim {
    */
   getAccounts(callback?: RequestCallbackFunction) {
     var url = "https://api.zaim.net/v2/home/account";
-    if (callback) this._httpGet(url, { mapping: 1 }, callback);
-    else return this._httpGetAsync(url, { mapping: 1 });
+    if (callback) this.httpGet(url, { mapping: 1 }, callback);
+    else return this.httpGetAsync(url, { mapping: 1 });
   }
 
   /**
@@ -396,8 +410,8 @@ export default class Zaim {
    */
   getCurrencies(callback?: RequestCallbackFunction) {
     var url = "https://api.zaim.net/v2/currency";
-    if (callback) this._httpGet(url, {}, callback);
-    else return this._httpGetAsync(url, {});
+    if (callback) this.httpGet(url, {}, callback);
+    else return this.httpGetAsync(url, {});
   }
 
   /**
@@ -407,7 +421,7 @@ export default class Zaim {
    * @param {string} url
    * @param {Function} callback
    */
-  _httpGet(url: string, params: any, callback: RequestCallbackFunction) {
+  private httpGet(url: string, params: any, callback: RequestCallbackFunction) {
     if (!this.token || !this.secret) {
       throw new Error("accessToken and tokenSecret must be configured.");
     }
@@ -436,7 +450,11 @@ export default class Zaim {
    * @param {object} params
    * @param {Function} callback
    */
-  _httpPost(url: string, params: any, callback: RequestCallbackFunction) {
+  private httpPost(
+    url: string,
+    params: any,
+    callback: RequestCallbackFunction
+  ) {
     if (!this.token || !this.secret) {
       throw new Error("accessToken and tokenSecret must be configured.");
     }
@@ -459,7 +477,7 @@ export default class Zaim {
    * @param {object} params
    * @param {Function} callback
    */
-  _httpPut(url: string, params: any, callback: RequestCallbackFunction) {
+  private httpPut(url: string, params: any, callback: RequestCallbackFunction) {
     if (!this.token || !this.secret) {
       throw new Error("accessToken and tokenSecret must be configured.");
     }
@@ -481,7 +499,7 @@ export default class Zaim {
    * @param {string} url
    * @param {Function} callback
    */
-  _httpDelete(url: string, callback: RequestCallbackFunction) {
+  private httpDelete(url: string, callback: RequestCallbackFunction) {
     if (!this.token || !this.secret) {
       throw new Error("accessToken and tokenSecret must be configured.");
     }
@@ -503,11 +521,20 @@ export default class Zaim {
    * @api private
    * @return {string} ex) 2013-4-9
    */
-  _getCurrentDate() {
+  private getCurrentDate() {
     var date = new Date();
-    return (
-      date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
-    );
+    return this.formatDate(date);
+  }
+
+  private formatDate(date: Date | string) {
+    if (date instanceof Date) {
+      return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+    } else {
+      if (date.match(/^\d{4}-\d{1,2}-\d{2}$/)) return date;
+      throw new Error(
+        "Wrong date format. Correct format is `YYYY-mm-dd`. Consider using `Date`, which zaim.js automatically formats."
+      );
+    }
   }
 
   // Promisified
@@ -519,7 +546,7 @@ export default class Zaim {
    * @param {string} url
    * @param {Function} callback
    */
-  async _httpGetAsync(url: string, params: any): Promise<any> {
+  private async httpGetAsync(url: string, params: any): Promise<any> {
     if (!this.token || !this.secret) {
       throw new Error("accessToken and tokenSecret must be configured.");
     }
@@ -540,7 +567,7 @@ export default class Zaim {
    * @param {object} params
    * @param {Function} callback
    */
-  async _httpPostAsync(url: string, params: any): Promise<any> {
+  private async httpPostAsync(url: string, params: any): Promise<any> {
     if (!this.token || !this.secret) {
       throw new Error("accessToken and tokenSecret must be configured.");
     }
@@ -555,7 +582,7 @@ export default class Zaim {
    * @param {object} params
    * @param {Function} callback
    */
-  async _httpPutAsync(url: string, params: any): Promise<any> {
+  private async httpPutAsync(url: string, params: any): Promise<any> {
     if (!this.token || !this.secret) {
       throw new Error("accessToken and tokenSecret must be configured.");
     }
@@ -569,7 +596,7 @@ export default class Zaim {
    * @param {string} url
    * @param {Function} callback
    */
-  async _httpDeleteAsync(url: string): Promise<any> {
+  private async httpDeleteAsync(url: string): Promise<any> {
     if (!this.token || !this.secret) {
       throw new Error("accessToken and tokenSecret must be configured.");
     }

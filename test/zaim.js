@@ -2,17 +2,17 @@ var dir = process.env.ZAIM_COVERAGE ? "../lib-cov/" : "../lib/",
   Zaim = require(dir + "zaim").default,
   expect = require("expect.js");
 
-describe("Constructor suite", function() {
-  it("should throw a error without consumer key and secret", function() {
-    expect(function() {
+describe("Constructor suite", () => {
+  it("should throw a error without consumer key and secret", () => {
+    expect(() => {
       new Zaim({});
-    }).to.throwError(function(e) {
+    }).to.throwError(e => {
       expect(e.message).to.equal("ConsumerKey and secret must be configured.");
     });
   });
 
-  it("should throw a error without consumer secret", function() {
-    expect(function() {
+  it("should throw a error without consumer secret", () => {
+    expect(() => {
       new Zaim({
         consumerKey: "consumerKey",
         callback: "http://zaim.net"
@@ -20,8 +20,8 @@ describe("Constructor suite", function() {
     }).to.throwError();
   });
 
-  it("should throw a error without consumer key", function() {
-    expect(function() {
+  it("should throw a error without consumer key", () => {
+    expect(() => {
       new Zaim({
         consumerSecret: "consumerSecret",
         callback: "http://zaim.net"
@@ -29,8 +29,8 @@ describe("Constructor suite", function() {
     }).to.throwError();
   });
 
-  it("should not throw a error with valid params", function() {
-    expect(function() {
+  it("should not throw a error with valid params", () => {
+    expect(() => {
       new Zaim({
         consumerKey: "consumerKey",
         consumerSecret: "consumerSecret",
@@ -39,43 +39,43 @@ describe("Constructor suite", function() {
     }).to.not.throwError();
   });
 
-  it("should throw error without callback", function() {
-    expect(function() {
+  it("should throw error without callback", () => {
+    expect(() => {
       new Zaim({
         consumerKey: "consumerKey",
         consumerSecret: "consumerSecret"
       });
-    }).to.throwError(function(e) {
+    }).to.throwError(e => {
       expect(e.message).to.equal("Callback url must be configured.");
     });
   });
 
-  it("should throw error without callback when only accessToken is given", function() {
-    expect(function() {
+  it("should throw error without callback when only accessToken is given", () => {
+    expect(() => {
       new Zaim({
         consumerKey: "consumerKey",
         consumerSecret: "consumerSecret",
         accessToken: "accessToken"
       });
-    }).to.throwError(function(e) {
+    }).to.throwError(e => {
       expect(e.message).to.equal("Callback url must be configured.");
     });
   });
 
-  it("should throw error without callback when only accessTokenSecret is given", function() {
-    expect(function() {
+  it("should throw error without callback when only accessTokenSecret is given", () => {
+    expect(() => {
       new Zaim({
         consumerKey: "consumerKey",
         consumerSecret: "consumerSecret",
         accessTokenSecret: "accessTokenSecret"
       });
-    }).to.throwError(function(e) {
+    }).to.throwError(e => {
       expect(e.message).to.equal("Callback url must be configured.");
     });
   });
 
-  it("should not throw error even when callback is missing if accessToken and accessTokenSecret are given", function() {
-    expect(function() {
+  it("should not throw error even when callback is missing if accessToken and accessTokenSecret are given", () => {
+    expect(() => {
       new Zaim({
         consumerKey: "consumerKey",
         consumerSecret: "consumerSecret",
@@ -86,26 +86,26 @@ describe("Constructor suite", function() {
   });
 });
 
-describe("getAuthorizationUrl() suite", function() {
-  it("should not throw error with valid parameters", function() {
-    var zaim = new Zaim({
+describe("getAuthorizationUrl() suite", () => {
+  it("should not throw error with valid parameters", () => {
+    const zaim = new Zaim({
       consumerKey: "consumerKey",
       consumerSecret: "consumerSecret",
       callback: "http://zaim.net"
     });
-    expect(function() {
+    expect(() => {
       zaim.getAuthorizationUrl();
     }).to.not.throwError();
   });
 
-  it("should match expected RegExp", function() {
-    var zaim = new Zaim({
+  it("should match expected RegExp", () => {
+    const zaim = new Zaim({
       consumerKey: "consumerKey",
       consumerSecret: "consumerSecret",
       callback: "http://zaim.net"
     });
 
-    zaim.getAuthorizationUrl(function(url) {
+    zaim.getAuthorizationUrl(url => {
       expect(url).to.match(
         /^https:\/\/www.zaim.net\/users\/auth\?oauth_token=/
       );
@@ -113,9 +113,9 @@ describe("getAuthorizationUrl() suite", function() {
   });
 });
 
-describe("setter suite", function() {
-  it("should equal accessToken", function() {
-    var zaim = new Zaim({
+describe("setter suite", () => {
+  it("should equal accessToken", () => {
+    const zaim = new Zaim({
       consumerKey: "consumerKey",
       consumerSecret: "consumerSecret",
       callback: "http://zaim.net"
@@ -124,8 +124,8 @@ describe("setter suite", function() {
     expect(zaim.token).to.equal("accessToken");
   });
 
-  it("should equal accessTokenSecret", function() {
-    var zaim = new Zaim({
+  it("should equal accessTokenSecret", () => {
+    const zaim = new Zaim({
       consumerKey: "consumerKey",
       consumerSecret: "consumerSecret",
       callback: "http://zaim.net"
@@ -135,30 +135,30 @@ describe("setter suite", function() {
   });
 });
 
-describe("createPay suite", function() {
-  it("should throw error with empty params", function() {
-    var zaim = new Zaim({
+describe("createPay suite", () => {
+  it("should throw error with empty params", () => {
+    const zaim = new Zaim({
       consumerKey: "consumerKey",
       consumerSecret: "consumerSecret",
       callback: "http://zaim.net"
     });
-    expect(function() {
-      zaim.createPay({}, function(data) {});
-    }).to.throwError(function(e) {
+    expect(() => {
+      zaim.createPay({}, data => {});
+    }).to.throwError(e => {
       expect(e.message).to.equal(
         "Invalid parameters.category_id, genre_id and amount are necessary."
       );
     });
   });
 
-  it("with valid parameters", function() {
-    var zaim = new Zaim({
+  it("with valid parameters", () => {
+    const zaim = new Zaim({
       consumerKey: "consumerKey",
       consumerSecret: "consumerSecret",
       callback: "http://zaim.net"
     });
     // throw error because set invalid consumer key and secret.
-    expect(function() {
+    expect(() => {
       zaim.createPay(
         {
           category_id: "category_id",
@@ -166,9 +166,9 @@ describe("createPay suite", function() {
           amount: 100,
           date: "2013-04-10"
         },
-        function(data, error) {}
+        (data, error) => {}
       );
-    }).to.throwError(function(e) {
+    }).to.throwError(e => {
       expect(e.message).to.not.equal(
         "Invalid parameters.category_id, genre_id and amount are necessary."
       );
@@ -176,38 +176,38 @@ describe("createPay suite", function() {
   });
 });
 
-describe("createIncome suite", function() {
-  it("should throw error with empty params", function() {
-    var zaim = new Zaim({
+describe("createIncome suite", () => {
+  it("should throw error with empty params", () => {
+    const zaim = new Zaim({
       consumerKey: "consumerKey",
       consumerSecret: "consumerSecret",
       callback: "http://zaim.net"
     });
-    expect(function() {
-      zaim.createIncome({}, function(data) {});
-    }).to.throwError(function(e) {
+    expect(() => {
+      zaim.createIncome({}, data => {});
+    }).to.throwError(e => {
       expect(e.message).to.equal(
         "Invalid parameters.category_id and amount are necessary."
       );
     });
   });
 
-  it("with valid parameters", function() {
-    var zaim = new Zaim({
+  it("with valid parameters", () => {
+    const zaim = new Zaim({
       consumerKey: "consumerKey",
       consumerSecret: "consumerSecret",
       callback: "http://zaim.net"
     });
-    expect(function() {
+    expect(() => {
       zaim.createIncome(
         {
           category_id: "category_id",
           amount: 100,
           date: "2013-04-10"
         },
-        function(data, error) {}
+        (data, error) => {}
       );
-    }).to.throwError(function(e) {
+    }).to.throwError(e => {
       expect(e.message).to.not.equal(
         "Invalid parameters.category_id and amount are necessary."
       );
@@ -215,68 +215,68 @@ describe("createIncome suite", function() {
   });
 });
 
-describe("private method suite", function() {
-  it("should throw error without access token and secret", function() {
-    var zaim = new Zaim({
+describe("private method suite", () => {
+  it("should throw error without access token and secret", () => {
+    const zaim = new Zaim({
       consumerKey: "consumerKey",
       consumerSecret: "consumerSecret",
       callback: "http://zaim.net"
     });
-    expect(function() {
-      zaim._httpGet("http://zaim.net", function(data) {});
-    }).to.throwError(function(e) {
+    expect(() => {
+      zaim.httpGet("http://zaim.net", data => {});
+    }).to.throwError(e => {
       expect(e.message).to.equal(
         "accessToken and tokenSecret must be configured."
       );
     });
   });
 
-  it("should throw error without access token secret", function() {
-    var zaim = new Zaim({
+  it("should throw error without access token secret", () => {
+    const zaim = new Zaim({
       consumerKey: "consumerKey",
       consumerSecret: "consumerSecret",
       accessToken: "accessToken",
       callback: "http://zaim.net"
     });
-    expect(function() {
-      zaim._httpGet("http://zaim.net/", function(data) {});
-    }).to.throwError(function(e) {
+    expect(() => {
+      zaim.httpGet("http://zaim.net/", data => {});
+    }).to.throwError(e => {
       expect(e.message).to.equal(
         "accessToken and tokenSecret must be configured."
       );
     });
   });
 
-  it("should throw error without access token", function() {
-    var zaim = new Zaim({
+  it("should throw error without access token", () => {
+    const zaim = new Zaim({
       consumerKey: "consumerKey",
       consumerSecret: "consumerSecret",
       accessTokenSecret: "accessTokenSecret",
       callback: "http://zaim.net"
     });
-    expect(function() {
-      zaim._httpPost("http://zaim.net/", {}, function(data) {});
-    }).to.throwError(function(e) {
+    expect(() => {
+      zaim.httpPost("http://zaim.net/", {}, data => {});
+    }).to.throwError(e => {
       expect(e.message).to.equal(
         "accessToken and tokenSecret must be configured."
       );
     });
   });
 
-  it("should not throw error with access token and secret", function() {
-    var zaim = new Zaim({
+  it("should not throw error with access token and secret", () => {
+    const zaim = new Zaim({
       consumerKey: "consumerKey",
       consumerSecret: "consumerSecret",
       accessToken: "accessToken",
       accessTokenSecret: "accessTokenSecret"
     });
-    expect(function() {
-      zaim._httpPost("http://zaim.net/", {}, function(data) {});
+    expect(() => {
+      zaim.httpPost("http://zaim.net/", {}, data => {});
     }).to.not.throwError();
   });
 
-  it("should return valid date today", function() {
-    var zaim = new Zaim({
+  it("should return valid date today", () => {
+    const zaim = new Zaim({
         consumerKey: "consumerKey",
         consumerSecret: "consumerSecret",
         accessToken: "accessToken",
@@ -286,6 +286,30 @@ describe("private method suite", function() {
       yy = (ymd.getYear() % 1900) + 1900,
       mm = ymd.getMonth() + 1,
       dd = ymd.getDate();
-    expect(zaim._getCurrentDate()).to.equal(yy + "-" + mm + "-" + dd);
+    expect(zaim.getCurrentDate()).to.equal(yy + "-" + mm + "-" + dd);
+  });
+  it("should return valid formatted date", () => {
+    const zaim = new Zaim({
+      consumerKey: "consumerKey",
+      consumerSecret: "consumerSecret",
+      accessToken: "accessToken",
+      accessTokenSecret: "accessTokenSecret"
+    });
+    expect(zaim.formatDate(new Date(2018, 10, 24))).to.equal("2018-11-24");
+  });
+  it("should throw an error with wrongly-formatted string", () => {
+    const zaim = new Zaim({
+      consumerKey: "consumerKey",
+      consumerSecret: "consumerSecret",
+      accessToken: "accessToken",
+      accessTokenSecret: "accessTokenSecret"
+    });
+    expect(() => {
+      zaim.formatDate("2018/11/24");
+    }).to.throwError(e => {
+      expect(e.message).to.equal(
+        "Wrong date format. Correct format is `YYYY-mm-dd`. Consider using `Date`, which zaim.js automatically formats."
+      );
+    });
   });
 });
